@@ -1,0 +1,69 @@
+----------------- Light Switch -----------------
+
+from machine import Pin
+
+led = Pin(16, Pin.OUT)
+btn = Pin(34, Pin.IN)
+
+while True:
+     if btn() == 0:
+          led.on()
+     else:
+          led.off()
+
+----------------- Beep Beep -----------------
+
+from machine import Pin, PWM, ADC
+import time
+
+potentiometer = ADC(Pin(39))
+buzzer = PWM(Pin(25), Pin.OUT)
+buzzer.freq(4000)
+
+
+while True:
+    pot_value = potentiometer.read()
+    beep_duration = int(100 + (pot_value / 4095) * 900)  # Scale to range 0.1-1.0 seconds
+    print(pot_value, beep_duration)
+    buzzer.duty(512)
+    time.sleep_ms(beep_duration)
+    buzzer.duty(0)
+    time.sleep_ms(beep_duration)
+
+
+
+----------------- Whats my name -----------------
+
+
+from machine import Pin, I2C
+import ssd1306
+import time
+
+i2c = I2C(scl=Pin(22), sda=Pin(21))
+oled = ssd1306.SSD1306_I2C(128, 64, i2c)
+
+# Clear the OLED display
+oled.fill(0)
+oled.show()
+
+# Get user's name
+name = input("Enter your name : ")
+
+# Display the user's name on the OLED
+oled.text("Hello,", 0, 0)
+oled.text(name, 0, 16)
+oled.text("Welcome!", 0, 32)
+oled.show()
+
+# Display for 5 seconds
+time.sleep(5)
+
+# Clear the OLED display
+oled.fill(0)
+oled.show()
+
+
+
+
+
+
